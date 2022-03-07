@@ -26,3 +26,4 @@ public interface TaskDAO {
     @Delete
     Completable delete(TaskEntity task);
 }
+//
