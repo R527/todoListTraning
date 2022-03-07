@@ -2,10 +2,10 @@ package com.example.todolisttraining;
 
 import android.content.Context;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+//import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+//import androidx.room.Room;
+//import androidx.test.core.app.ApplicationProvider;
+//import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.todolisttraining.db.AppDatabase;
 import com.example.todolisttraining.db.TaskDAO;
@@ -24,21 +24,21 @@ import java.io.IOException;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
+//@RunWith(AndroidJUnit4.class)
 public class SimpleEntityReadWriteTest {
     private TaskDAO taskDao;
     private AppDatabase db;
 
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule =
-            new InstantTaskExecutorRule();
-
-    @Before
-    public void createDb() {
-        Context context = ApplicationProvider.getApplicationContext();
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
-        taskDao = db.taskDAO();
-    }
+//    @Rule
+//    public InstantTaskExecutorRule instantTaskExecutorRule =
+//            new InstantTaskExecutorRule();
+//
+//    @Before
+//    public void createDb() {
+//        Context context = ApplicationProvider.getApplicationContext();
+//        db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
+//        taskDao = db.taskDAO();
+//    }
 
     @After
     public void closeDb() throws IOException {

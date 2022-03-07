@@ -4,10 +4,15 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+
+//データベースに保存する変数を用意
 @Entity(tableName = "tasks")
 public class TaskEntity {
-    @PrimaryKey(autoGenerate = true)
+
+    //自動生成true
+  @PrimaryKey(autoGenerate = true)
     public int id;
+
 
     @ColumnInfo(name = "first_name")
     public String text;

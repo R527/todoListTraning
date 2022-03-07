@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * リストの表示データとリストUIをひもつける
+ *
  */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     private static final String TAG = "TaskAdapter";
@@ -28,6 +29,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         mData = new ArrayList<String>();
     }
 
+
+    //ViewHolderとはタスク１とデリートボタンなどをまとめている一つのアイテムを指す
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textView;
@@ -58,6 +61,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         return new ViewHolder(v);
     }
 
+    //アイテム追加、削除時更新する
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
@@ -70,7 +74,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 if(mListener != null) {
                     mListener.onClickDeleteTask((int)v.getTag());
                 }
-
             }
         });
     }

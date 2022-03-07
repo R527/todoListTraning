@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-
+//Fragmentとは、コンテンツとライフサイクルを持ったビューです
 public class TaskListFragment extends Fragment implements DeleteTaskListener {
     private static final String TAG = "TaskListFragment";
 
@@ -54,21 +54,22 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
         mAdapter = new TaskAdapter();
         mAdapter.setDeleteTaskListener(this);
 
-
         mRecyclerView.setAdapter(mAdapter);
-
-
 
         return view;
     }
 
+
+    //Listが更新されたのかを受け取る
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
+        //mDisposableでそれ以下の処理が繰り返されるのを止める
         mDisposable.add(mTaskListViewModel.getTaskTextList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                //AdapterにあるRecyclerViewにTextListを渡す
                 .subscribe(textList -> {
                             mAdapter.setData(textList);
                         },
@@ -77,6 +78,8 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
         Log.d(TAG, "mTaskListViewModel.getTaskTextList()");
     }
 
+    //アプリを閉じると呼び出される
+    //mDisposableをすべて破棄する
     @Override
     public void onStop() {
         super.onStop();
@@ -84,6 +87,7 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
         mDisposable.clear();
     }
 
+    //タスクを削除する処理
     @Override
     public void onClickDeleteTask(int position) {
         mDisposable.add(mTaskListViewModel.deleteTask(position)
@@ -91,6 +95,5 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> mAdapter.notifyDataSetChanged(),
                         throwable -> Log.e(TAG, "Unable to update username", throwable)));
-
     }
 }

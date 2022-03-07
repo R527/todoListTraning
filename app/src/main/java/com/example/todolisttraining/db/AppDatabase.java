@@ -6,6 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+
+
+//データベースを取り扱うクラス
+
 @Database(entities = {TaskEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase  extends RoomDatabase {
 
@@ -15,6 +19,7 @@ public abstract class AppDatabase  extends RoomDatabase {
     public abstract TaskDAO taskDAO();
 
     public static AppDatabase getInstance(final Context context) {
+        //二つ以上あると問題だから制御する
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {

@@ -11,8 +11,12 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 
 
+//タスクのエンティティにアクセスする
+//List取得、追加、削除
 @Dao
 public interface TaskDAO {
+
+    //EntityにあるListを取得
     @Query("SELECT * FROM tasks")
     Flowable<List<TaskEntity>> getAll();
 

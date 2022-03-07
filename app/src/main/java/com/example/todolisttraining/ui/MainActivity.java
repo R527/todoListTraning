@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
         //タスク追加ボタン
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.add_task_button);
+
+        //DiaLogを表示するボタン設定
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AddTaskDialogFragment dialog = new AddTaskDialogFragment();
