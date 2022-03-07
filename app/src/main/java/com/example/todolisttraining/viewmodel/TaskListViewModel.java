@@ -10,8 +10,10 @@ import androidx.lifecycle.AndroidViewModel;
 import com.example.todolisttraining.AppComponent;
 import com.example.todolisttraining.db.TaskDAO;
 import com.example.todolisttraining.db.TaskEntity;
+import com.example.todolisttraining.db.TaskRepository;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -34,8 +36,8 @@ import io.reactivex.rxjava3.core.Flowable;
 public class TaskListViewModel extends AndroidViewModel {
     private final String TAG = "TaskViewModel";
     private TaskDAO mTaskDAO;
-    private List<TaskEntity> mTasks;
-
+    public List<TaskEntity> mTasks;
+    private TaskRepository taskRepository = new TaskRepository(getApplication());
 
     //コンストラクター
     public TaskListViewModel(@NonNull Application application){
@@ -65,17 +67,15 @@ public class TaskListViewModel extends AndroidViewModel {
 
     //タスクを追加する処理
     public Completable insertTask(final String text) {
-        //Entityに登録
-        TaskEntity task = new TaskEntity();
-        task.setText(text);
-        //データベースに登録
-        return mTaskDAO.insert(task);
+        return taskRepository.insertTask(text);
     }
 
     //タスク削除処理
     public Completable deleteTask(int position) {
-        return mTaskDAO.delete(mTasks.get(position));
+        return taskRepository.deleteTask(position);
     }
+
+
 
 
 /*    public static class TaskListViewModelFactory extends ViewModelProvider.NewInstanceFactory {

@@ -9,20 +9,25 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "tasks")
 public class TaskEntity {
 
-    //自動生成true
-  @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     public int id;
 
+    //自動生成true
+    @ColumnInfo(name = "uuid")
+    public String uuid;
 
-    @ColumnInfo(name = "first_name")
+    @ColumnInfo(name = "text")
     public String text;
 
-    public int getId() {
-        return id;
+    @ColumnInfo(name = "isDelete")
+    public boolean isDelete;
+
+    public String getUUId() {
+        return uuid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUUId(String id) {
+        this.uuid = uuid;
     }
 
     public String getText() {
@@ -31,5 +36,13 @@ public class TaskEntity {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }

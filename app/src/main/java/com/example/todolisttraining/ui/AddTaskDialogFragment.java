@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.todolisttraining.R;
+import com.example.todolisttraining.db.TaskRepository;
 import com.example.todolisttraining.viewmodel.TaskListViewModel;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -27,6 +28,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class AddTaskDialogFragment  extends DialogFragment {
     private final String TAG = "AddTaskDialogFragment";
     private TaskListViewModel mTaskListViewModel;
+
     private final CompositeDisposable mDisposable = new CompositeDisposable();//破棄するためのクラス？
 
     @Override
