@@ -21,20 +21,18 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 
 
-public class TaskRepository extends AppCompatActivity {
+public class TaskRepository {
     private final String TAG = "TaskRepository";
     private TaskDAO mTaskDAO;
-    private FirebaseManager firebaseManager = new FirebaseManager();
+    private FirebaseManager firebaseManager;
 
     public TaskEntity getAllData(){
         return  null;
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTaskDAO = ((AppComponent)getApplication()).getDatabase().taskDAO();
-        Log.d(TAG,"onCreate");
+    public TaskRepository(TaskDAO mTaskDAO, FirebaseManager firebaseManager) {
+        this.mTaskDAO = mTaskDAO;
+        this.firebaseManager = firebaseManager;
     }
 
     public Completable insertTask(String text){

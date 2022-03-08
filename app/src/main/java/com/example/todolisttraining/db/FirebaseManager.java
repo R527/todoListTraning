@@ -20,18 +20,9 @@ public class FirebaseManager {
     private final String TAG = "FirebaseManager";
     FirebaseFirestore firebaseFirestore;
 
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-//        super.onCreate(savedInstanceState, persistentState);
-//        firebaseFirestore = FirebaseFirestore.getInstance();
-//        Log.d(TAG,"onCreate");
-//    }
-    //todo onCreateはなぜ走らない
-
-    public void setUpFirebaseManager(){
-        firebaseFirestore = FirebaseFirestore.getInstance();
+    public FirebaseManager(FirebaseFirestore firebaseFirestore) {
+        this.firebaseFirestore = firebaseFirestore;
     }
-
 
 
     //タスクを取得してデータを返す

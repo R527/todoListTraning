@@ -37,15 +37,30 @@ public class TaskListViewModel extends AndroidViewModel {
     private final String TAG = "TaskViewModel";
     private TaskDAO mTaskDAO;
     public List<TaskEntity> mTasks;
-    private TaskRepository taskRepository = new TaskRepository();
+    private TaskRepository taskRepository;
 
     //コンストラクター
-    public TaskListViewModel(@NonNull Application application){
+//    public TaskListViewModel(@NonNull Application application){
+//        super(application);
+//        //applicationとは
+//        //このアプリの中に一つしかないクラス
+//        //アプリ共通のコンポーネントをここから引き出す
+//        mTaskDAO = ((AppComponent)application).getDatabase().taskDAO();
+//    }
+//
+//
+//    public TaskListViewModel(@NonNull Application application, TaskDAO mTaskDAO, TaskRepository taskRepository) {
+//        super(application);
+//        this.mTaskDAO = mTaskDAO;
+//        this.taskRepository = taskRepository;
+//    }
+
+
+    public TaskListViewModel(@NonNull Application application, TaskDAO mTaskDAO, List<TaskEntity> mTasks, TaskRepository taskRepository) {
         super(application);
-        //applicationとは
-        //このアプリの中に一つしかないクラス
-        //アプリ共通のコンポーネントをここから引き出す
-        mTaskDAO = ((AppComponent)application).getDatabase().taskDAO();
+        this.mTaskDAO = mTaskDAO;
+        this.mTasks = mTasks;
+        this.taskRepository = taskRepository;
     }
 
     //非同期処理対応の返り値

@@ -13,16 +13,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
-    private FirebaseManager firebaseManager = new FirebaseManager();
-    private TaskRepository taskRepository = new TaskRepository();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //setUp処理
-        firebaseManager.setUpFirebaseManager();
 
         //タスク追加ボタン
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.add_task_button);
