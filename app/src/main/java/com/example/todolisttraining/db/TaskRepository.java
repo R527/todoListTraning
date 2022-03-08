@@ -2,8 +2,12 @@ package com.example.todolisttraining.db;
 
 
 import android.app.Application;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.AndroidViewModel;
 
@@ -14,24 +18,29 @@ import com.example.todolisttraining.viewmodel.TaskListViewModel;
 import java.util.List;
 import java.util.UUID;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 
 
-public class TaskRepository extends AndroidViewModel {
+public class TaskRepository extends AppCompatActivity {
+    private final String TAG = "TaskRepository";
     private TaskDAO mTaskDAO;
     private FirebaseManager firebaseManager = new FirebaseManager();
-    private TaskListViewModel taskListViewModel = new TaskListViewModel(getApplication());
-
-    public TaskRepository(@NonNull Application application) {
-        super(application);
-        mTaskDAO = ((AppComponent)application).getDatabase().taskDAO();
-    }
-
 
     public TaskEntity getAllData(){
         return  null;
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTaskDAO = ((AppComponent)getApplication()).getDatabase().taskDAO();
+        Log.d(TAG,"onCreate");
+    }
+
     public Completable insertTask(String text){
+
+        Log.d(TAG,"insertTask");
+
         //UUID生成
         String uuid = UUID.randomUUID().toString();
 
@@ -45,10 +54,10 @@ public class TaskRepository extends AndroidViewModel {
         task.setDelete(false);
 
         //Data比較
-        compareData();
+        //compareData();
+        Log.d(TAG,task.toString());
 
         //RoomDatabaseに登録
-        //todo mTaskDaoが取得方法は合っているのか
         return mTaskDAO.insert(task);
     }
 
@@ -57,7 +66,7 @@ public class TaskRepository extends AndroidViewModel {
     //表記上削除するがRoomからは削除せずにisDeleteフラグをtrueにして表示しないよう処理する
     public Completable deleteTask(int position) {
 
-        List<TaskEntity> list = taskListViewModel.mTasks;
+        List<TaskEntity> list = (List<TaskEntity>) mTaskDAO.getAll();
         list.get(position).setDelete(true);
 
         return mTaskDAO.update(list.get(position));
@@ -68,7 +77,6 @@ public class TaskRepository extends AndroidViewModel {
     public void compareData(){
         firebaseManager.getFirebaseData();
         mTaskDAO.getAll();
-
     }
 
 }

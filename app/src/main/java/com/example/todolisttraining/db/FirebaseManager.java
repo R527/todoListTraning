@@ -16,15 +16,21 @@ import java.util.List;
 import java.util.Map;
 
 //Firebase全般扱う
-public class FirebaseManager extends AppCompatActivity {
+public class FirebaseManager {
     private final String TAG = "FirebaseManager";
     FirebaseFirestore firebaseFirestore;
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+//        super.onCreate(savedInstanceState, persistentState);
+//        firebaseFirestore = FirebaseFirestore.getInstance();
+//        Log.d(TAG,"onCreate");
+//    }
+    //todo onCreateはなぜ走らない
+
+    public void setUpFirebaseManager(){
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
-
 
 
 
@@ -32,7 +38,7 @@ public class FirebaseManager extends AppCompatActivity {
     public List<TaskEntity> getFirebaseData() {
 
         Log.d(TAG,"getFirebaseData");
-
+        firebaseFirestore = FirebaseFirestore.getInstance();
         List<TaskEntity> taskEntities = null;
         //task内容を取得する
         firebaseFirestore.collection("tasks")
@@ -64,7 +70,8 @@ public class FirebaseManager extends AppCompatActivity {
     //uuid = UUIDクラスを取得;
     public void addFirebaseData(String text,String uuid) {
 
-        Log.d(TAG,"upDateFirebaseData");
+        Log.d(TAG,"addFirebaseData");
+        firebaseFirestore = FirebaseFirestore.getInstance();
         Map<String,Object> tasks = new HashMap<>();
 
         //task情報をセットする

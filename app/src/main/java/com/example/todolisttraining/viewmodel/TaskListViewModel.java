@@ -37,7 +37,7 @@ public class TaskListViewModel extends AndroidViewModel {
     private final String TAG = "TaskViewModel";
     private TaskDAO mTaskDAO;
     public List<TaskEntity> mTasks;
-    private TaskRepository taskRepository = new TaskRepository(getApplication());
+    private TaskRepository taskRepository = new TaskRepository();
 
     //コンストラクター
     public TaskListViewModel(@NonNull Application application){
