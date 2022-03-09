@@ -20,8 +20,8 @@ public class FirebaseManager {
     private final String TAG = "FirebaseManager";
     FirebaseFirestore firebaseFirestore;
 
-    public FirebaseManager(FirebaseFirestore firebaseFirestore) {
-        this.firebaseFirestore = firebaseFirestore;
+    public FirebaseManager() {
+        this.firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
 
@@ -29,7 +29,6 @@ public class FirebaseManager {
     public List<TaskEntity> getFirebaseData() {
 
         Log.d(TAG,"getFirebaseData");
-        firebaseFirestore = FirebaseFirestore.getInstance();
         List<TaskEntity> taskEntities = null;
         //task内容を取得する
         firebaseFirestore.collection("tasks")
@@ -62,7 +61,6 @@ public class FirebaseManager {
     public void addFirebaseData(String text,String uuid) {
 
         Log.d(TAG,"addFirebaseData");
-        firebaseFirestore = FirebaseFirestore.getInstance();
         Map<String,Object> tasks = new HashMap<>();
 
         //task情報をセットする

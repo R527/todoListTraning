@@ -1,19 +1,7 @@
 package com.example.todolisttraining.db;
 
 
-import android.app.Application;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.AndroidViewModel;
-
-import com.example.todolisttraining.AppComponent;
-import com.example.todolisttraining.ui.TaskListFragment;
-import com.example.todolisttraining.viewmodel.TaskListViewModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,13 +14,33 @@ public class TaskRepository {
     private TaskDAO mTaskDAO;
     private FirebaseManager firebaseManager;
 
-    public TaskEntity getAllData(){
-        return  null;
+    public Flowable<List<TaskEntity>> getAllData(){
+        return  mTaskDAO.getAll();
     }
 
-    public TaskRepository(TaskDAO mTaskDAO, FirebaseManager firebaseManager) {
-        this.mTaskDAO = mTaskDAO;
-        this.firebaseManager = firebaseManager;
+    public TaskRepository() {
+        this.mTaskDAO = new TaskDAO() {
+            @Override
+            public Flowable<List<TaskEntity>> getAll() {
+                return null;
+            }
+
+            @Override
+            public Completable insert(TaskEntity tasks) {
+                return null;
+            }
+
+            @Override
+            public Completable delete(TaskEntity task) {
+                return null;
+            }
+
+            @Override
+            public Completable update(TaskEntity task) {
+                return null;
+            }
+        };
+        this.firebaseManager = new FirebaseManager();
     }
 
     public Completable insertTask(String text){

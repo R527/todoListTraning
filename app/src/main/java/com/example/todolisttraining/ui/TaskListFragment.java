@@ -15,7 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolisttraining.R;
+import com.example.todolisttraining.db.TaskDAO;
+import com.example.todolisttraining.db.TaskEntity;
+import com.example.todolisttraining.db.TaskRepository;
 import com.example.todolisttraining.viewmodel.TaskListViewModel;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -28,7 +33,17 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
     private RecyclerView mRecyclerView;
     protected TaskAdapter mAdapter;
     private TaskListViewModel mTaskListViewModel;
+//    private TaskDAO taskDAO;
+//    private List<TaskEntity> taskEntities;
+//    private TaskRepository taskRepository;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
+
+
+//    public TaskListFragment(TaskDAO taskDAO, List<TaskEntity> taskEntities, TaskRepository taskRepository) {
+//        this.taskDAO = taskDAO;
+//        this.taskEntities = taskEntities;
+//        this.taskRepository = taskRepository;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +62,9 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
 
+//        TaskListViewModel.TaskListViewModelFactory factory = new TaskListViewModel.TaskListViewModelFactory(
+//                requireActivity().getApplication(),taskDAO,taskEntities,taskRepository
+//        );
         mTaskListViewModel = new ViewModelProvider(this).get(TaskListViewModel.class);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_view);
