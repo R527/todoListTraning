@@ -3,6 +3,8 @@ package com.example.todolisttraining.db;
 
 import android.util.Log;
 
+import com.example.todolisttraining.AppComponent;
+
 import java.util.List;
 import java.util.UUID;
 import io.reactivex.rxjava3.core.Completable;
@@ -19,6 +21,7 @@ public class TaskRepository {
     }
 
     public TaskRepository() {
+
         this.mTaskDAO = new TaskDAO() {
             @Override
             public Flowable<List<TaskEntity>> getAll() {
@@ -64,6 +67,8 @@ public class TaskRepository {
         Log.d(TAG,task.toString());
 
         //RoomDatabaseに登録
+        //todo null
+        Log.d(TAG,mTaskDAO.insert(task).toString());
         return mTaskDAO.insert(task);
     }
 

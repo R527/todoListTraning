@@ -2,6 +2,7 @@ package com.example.todolisttraining.viewmodel;
 
 import android.app.Application;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -9,14 +10,12 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.todolisttraining.AppComponent;
 import com.example.todolisttraining.db.TaskDAO;
 import com.example.todolisttraining.db.TaskEntity;
 import com.example.todolisttraining.db.TaskRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -53,8 +52,9 @@ public class TaskListViewModel extends AndroidViewModel {
     //メソッド内にバージョン不足だと利用できないメソッドあるから注意書きの@RequiresApi
     @RequiresApi(api = Build.VERSION_CODES.N)
     public Flowable<List<String>> getTaskTextList() {
+        Log.d(TAG,"getTaskTextList");
         //tasksを全取得して
-        List<TaskEntity> list = (List<TaskEntity>)taskRepository.getAllData();
+        Flowable<List<TaskEntity>> list = taskRepository.getAllData();
         if(list == null){
             return null;
         }else{
@@ -69,10 +69,12 @@ public class TaskListViewModel extends AndroidViewModel {
                                 .collect(Collectors.toList());
                     });
         }
+
     }
 
     //タスクを追加する処理
     public Completable insertTask(final String text) {
+        Log.d(TAG,"insertTask");
         return taskRepository.insertTask(text);
     }
 

@@ -53,8 +53,6 @@ public class AddTaskDialogFragment  extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        CharSequence[] items = {"重要","test","aaa"};
-        boolean[] itemChecked = new boolean[items.length];
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -66,24 +64,22 @@ public class AddTaskDialogFragment  extends DialogFragment {
         //OKボタンの設定
         //キャンセルボタンの設定
         builder.setMessage("タスクの追加")
-                .setMultiChoiceItems(items, itemChecked, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-                    }
-                })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d(TAG, "OK was clicked.");
 
                         EditText editText = (EditText) getDialog().findViewById(R.id.task_text);
+                        //&& mTaskListViewModel.insertTask(editText.getText().toString()) != null
                         if (editText != null) {
                             //タスク追加処理
+                            Log.d(TAG,editText.getText().toString());
+//                            Log.d(TAG,mTaskListViewModel.insertTask("test").toString());
                             mDisposable.add(mTaskListViewModel.insertTask(editText.getText().toString())
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(() -> {},
                                             throwable -> Log.e(TAG, "Unable to update username", throwable)));
+
                         } else {
                             //例外
                             Log.e("", "EditText not found!");

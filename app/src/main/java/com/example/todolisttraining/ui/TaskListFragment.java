@@ -23,6 +23,7 @@ import com.example.todolisttraining.viewmodel.TaskListViewModel;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -33,17 +34,7 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
     private RecyclerView mRecyclerView;
     protected TaskAdapter mAdapter;
     private TaskListViewModel mTaskListViewModel;
-//    private TaskDAO taskDAO;
-//    private List<TaskEntity> taskEntities;
-//    private TaskRepository taskRepository;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
-
-
-//    public TaskListFragment(TaskDAO taskDAO, List<TaskEntity> taskEntities, TaskRepository taskRepository) {
-//        this.taskDAO = taskDAO;
-//        this.taskEntities = taskEntities;
-//        this.taskRepository = taskRepository;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,9 +53,6 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
 
-//        TaskListViewModel.TaskListViewModelFactory factory = new TaskListViewModel.TaskListViewModelFactory(
-//                requireActivity().getApplication(),taskDAO,taskEntities,taskRepository
-//        );
         mTaskListViewModel = new ViewModelProvider(this).get(TaskListViewModel.class);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_view);
@@ -83,15 +71,20 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
     @Override
     public void onStart() {
         super.onStart();
-        //mDisposableでそれ以下の処理が繰り返されるのを止める
-        mDisposable.add(mTaskListViewModel.getTaskTextList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                //AdapterにあるRecyclerViewにTextListを渡す
-                .subscribe(textList -> {
-                            mAdapter.setData(textList);
-                        },
-                        throwable -> Log.e(TAG, "Unable to get username", throwable)));
+
+//        Log.d(TAG,"onStart");
+
+        if(mTaskListViewModel.getTaskTextList() != null){
+            //mDisposableでそれ以下の処理が繰り返されるのを止める
+            mDisposable.add(mTaskListViewModel.getTaskTextList()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    //AdapterにあるRecyclerViewにTextListを渡す
+                    .subscribe(textList -> {
+                                mAdapter.setData(textList);
+                            },
+                            throwable -> Log.e(TAG, "Unable to get username", throwable)));
+        }
 
         Log.d(TAG, "mTaskListViewModel.getTaskTextList()");
     }
