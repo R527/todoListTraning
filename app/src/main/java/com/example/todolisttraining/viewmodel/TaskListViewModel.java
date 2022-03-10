@@ -45,7 +45,7 @@ public class TaskListViewModel extends AndroidViewModel {
     public TaskListViewModel(@NonNull Application application) {
         super(application);
         mTasks = new ArrayList<>();
-        this.taskRepository = new TaskRepository();
+        this.taskRepository = new TaskRepository(application);
     }
 
     //非同期処理対応の返り値
@@ -54,11 +54,11 @@ public class TaskListViewModel extends AndroidViewModel {
     public Flowable<List<String>> getTaskTextList() {
         Log.d(TAG,"getTaskTextList");
         //tasksを全取得して
-        Flowable<List<TaskEntity>> list = taskRepository.getAllData();
+        Flowable<List<TaskEntity>> list = taskRepository.getAllRoomData();
         if(list == null){
             return null;
         }else{
-            return taskRepository.getAllData()
+            return taskRepository.getAllRoomData()
                     //DatabaseにあるTasks＜List＞を取得していじる
                     .map(tasks -> {
                         mTasks = tasks;

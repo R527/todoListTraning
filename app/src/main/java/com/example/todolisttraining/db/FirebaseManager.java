@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class FirebaseManager {
     public List<TaskEntity> getFirebaseData() {
 
         Log.d(TAG,"getFirebaseData");
-        List<TaskEntity> taskEntities = null;
+        List<TaskEntity> taskEntities = new ArrayList<>();
         //task内容を取得する
         firebaseFirestore.collection("tasks")
                 .get()
@@ -43,7 +44,7 @@ public class FirebaseManager {
                                 Log.d(TAG,document.get("isDelete").toString());
 
                                 //task情報をtaskEntity化しListに追加
-                                taskEntities.add(setEntities(
+                                taskEntities.add(setTaskEntities(
                                         document.get("UUID").toString(),
                                         document.get("task").toString(),
                                         Boolean.valueOf(document.get("isDelete").toString())));
@@ -81,7 +82,7 @@ public class FirebaseManager {
 
     //List＜TaskEntity＞化するためのメソッド
     //
-    private TaskEntity setEntities(String uuid,String task,Boolean isDelete){
+    private TaskEntity setTaskEntities(String uuid,String task,Boolean isDelete){
         TaskEntity taskEntity = new TaskEntity();
 
         taskEntity.setUUId(uuid);

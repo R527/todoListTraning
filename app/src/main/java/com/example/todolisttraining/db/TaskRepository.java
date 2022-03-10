@@ -1,12 +1,19 @@
 package com.example.todolisttraining.db;
 
 
+import android.app.Application;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.todolisttraining.AppComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 
@@ -15,35 +22,17 @@ public class TaskRepository {
     private final String TAG = "TaskRepository";
     private TaskDAO mTaskDAO;
     private FirebaseManager firebaseManager;
+    private List<TaskEntity> mTasks = new ArrayList<>();
 
-    public Flowable<List<TaskEntity>> getAllData(){
-        return  mTaskDAO.getAll();
+    public TaskRepository(Application applicationContext) {
+        AppDatabase db = AppDatabase.getInstance(applicationContext);
+        this.mTaskDAO = db.taskDAO();
+
+        this.firebaseManager = new FirebaseManager();
     }
 
-    public TaskRepository() {
-
-        this.mTaskDAO = new TaskDAO() {
-            @Override
-            public Flowable<List<TaskEntity>> getAll() {
-                return null;
-            }
-
-            @Override
-            public Completable insert(TaskEntity tasks) {
-                return null;
-            }
-
-            @Override
-            public Completable delete(TaskEntity task) {
-                return null;
-            }
-
-            @Override
-            public Completable update(TaskEntity task) {
-                return null;
-            }
-        };
-        this.firebaseManager = new FirebaseManager();
+    public Flowable<List<TaskEntity>> getAllRoomData(){
+        return  mTaskDAO.getAll();
     }
 
     public Completable insertTask(String text){
@@ -60,15 +49,14 @@ public class TaskRepository {
         TaskEntity task = new TaskEntity();
         task.setText(text);
         task.setUUId(uuid);
+        Log.d(TAG,uuid);
         task.setDelete(false);
 
         //Data比較
-        //compareData();
+        compareData();
         Log.d(TAG,task.toString());
 
         //RoomDatabaseに登録
-        //todo null
-        Log.d(TAG,mTaskDAO.insert(task).toString());
         return mTaskDAO.insert(task);
     }
 
@@ -76,18 +64,22 @@ public class TaskRepository {
     //Task削除処理
     //表記上削除するがRoomからは削除せずにisDeleteフラグをtrueにして表示しないよう処理する
     public Completable deleteTask(int position) {
+        Flowable<List<TaskEntity>> list = getAllRoomData();
+        List<TaskEntity> list2 = new ArrayList<>();
 
-        List<TaskEntity> list = (List<TaskEntity>) mTaskDAO.getAll();
-        list.get(position).setDelete(true);
-
-        return mTaskDAO.update(list.get(position));
+        //mTaskDAO.update(list.get(position));
+        return null;
     }
 
 
     //Data比較
     public void compareData(){
-        firebaseManager.getFirebaseData();
-        mTaskDAO.getAll();
+        List<TaskEntity> firebaseList = firebaseManager.getFirebaseData();
+        List<TaskEntity> roomDataList = (List<TaskEntity>)getAllRoomData();
+
+        Log.d(TAG,firebaseList.toString());
+        Log.d(TAG,roomDataList.toString());
+
     }
 
 }

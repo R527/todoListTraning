@@ -1,5 +1,7 @@
 package com.example.todolisttraining.db;
 
+import android.util.Log;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -9,10 +11,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "tasks")
 public class TaskEntity {
 
+    //自動生成true
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    //自動生成true
     @ColumnInfo(name = "uuid")
     public String uuid;
 
@@ -26,7 +28,7 @@ public class TaskEntity {
         return uuid;
     }
 
-    public void setUUId(String id) {
+    public void setUUId(String uuid) {
         this.uuid = uuid;
     }
 
