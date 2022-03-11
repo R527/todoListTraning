@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class TaskRepository {
@@ -43,7 +44,13 @@ public class TaskRepository {
         String uuid = UUID.randomUUID().toString();
 
         //firebaseに登録する処理
-        firebaseManager.addFirebaseData(text,uuid);
+        firebaseManager.uploadTasks((List<TaskEntity>)getAllRoomData())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(() -> {
+                    //アップロード完了時の処理
+                    Log.d(TAG,"firebaseUploadTasks");
+                });
 
         //Entityに登録
         TaskEntity task = new TaskEntity();
@@ -74,11 +81,19 @@ public class TaskRepository {
 
     //Data比較
     public void compareData(){
-        List<TaskEntity> firebaseList = firebaseManager.getFirebaseData();
-        List<TaskEntity> roomDataList = (List<TaskEntity>)getAllRoomData();
-
-        Log.d(TAG,firebaseList.toString());
-        Log.d(TAG,roomDataList.toString());
+        firebaseManager.fetchTasks()
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe(tasksFromFirestore -> {
+                mTaskDAO.getAllSingle()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .subscribe(tasksFromDB -> {},
+                            throwable -> Log.e(TAG, "Unable to get username", throwable));
+                                //tasksFromFirestoreとtasksFromDBの比較処理
+                                //DBまたはfirestoreの更新
+                        },
+                        throwable -> Log.e(TAG, "Unable to get username", throwable));
 
     }
 

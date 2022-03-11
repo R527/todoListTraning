@@ -24,6 +24,14 @@ public class TaskEntity {
     @ColumnInfo(name = "isDelete")
     public boolean isDelete;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getUUId() {
         return uuid;
     }

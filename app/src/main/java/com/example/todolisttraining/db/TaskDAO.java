@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 
 //タスクのエンティティにアクセスする
@@ -20,6 +21,9 @@ public interface TaskDAO {
     //EntityにあるListを取得
     @Query("SELECT * FROM tasks")
     Flowable<List<TaskEntity>> getAll();
+
+    @Query("SELECT * FROM tasks")
+    Single<List<TaskEntity>> getAllSingle();
 
     @Insert
     Completable insert(TaskEntity tasks);
