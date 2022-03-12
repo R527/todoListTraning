@@ -101,6 +101,7 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
     //タスクを削除する処理
     @Override
     public void onClickDeleteTask(int position) {
+        Log.d(TAG,"onClickDeleteTask");
         mDisposable.add(mTaskListViewModel.deleteTask(position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -56,6 +56,7 @@ public class TaskListViewModel extends AndroidViewModel {
         Log.d(TAG,"getTaskTextList");
         //tasksを全取得して
         Single<List<TaskEntity>> list = taskRepository.getAllRoomData();
+        List<String> strList = new ArrayList<>();
 
         if(list == null){
             return null;
@@ -64,12 +65,21 @@ public class TaskListViewModel extends AndroidViewModel {
                     //DatabaseにあるTasks＜List＞を取得していじる
                     .map(tasks -> {
                         mTasks = tasks;
-                        Log.d(TAG, String.valueOf(mTasks.size()));//6個
-                        return tasks.stream()
-                                //Stringのみを抽出
-                                //for文で回すのと同じ処理
-                                .map(task -> task.getText())
-                                .collect(Collectors.toList());
+                        Log.d(TAG, String.valueOf(mTasks.size()));
+
+//                        return tasks.stream()
+//                                //Stringのみを抽出
+//                                //for文で回すのと同じ処理
+//                                .map(task -> task.getId())
+//                                .forEach(id -> tasks.get(id));
+
+
+                        for (TaskEntity item: mTasks) {
+                            if(item.isDelete() == false){
+                                strList.add(item.getText());
+                            }
+                        }
+                        return  strList;
                     });
         }
 
@@ -83,6 +93,7 @@ public class TaskListViewModel extends AndroidViewModel {
 
     //タスク削除処理
     public Completable deleteTask(int position) {
+        Log.d(TAG,"deleteTask");
         return taskRepository.deleteTask(position);
     }
 

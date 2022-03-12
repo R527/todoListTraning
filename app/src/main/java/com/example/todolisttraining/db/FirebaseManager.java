@@ -45,6 +45,7 @@ public class FirebaseManager {
                                 t.setId(0);
                                 t.setText((String) document.getData().get("text"));
                                 //t.setImportant((Boolean) document.getData().get("isImportant"));
+
                                 t.setDelete((Boolean) document.getData().get("isDelete"));
                                 t.setUUId((String) document.getData().get("uuid"));
                                 r.add(t);
@@ -61,14 +62,15 @@ public class FirebaseManager {
 
     //Taskをアップロードする
     public Completable uploadTasks(List<TaskEntity> tasks) {
-
-//        mFirestore.collection("tasks");
+        Log.d(TAG,  "uploadTasks");
+        Log.d(TAG, String.valueOf(tasks.size()));
         return Completable.create((sub) -> {
             mFirestore.runTransaction((Transaction.Function<Void>) transaction -> {
                 for (TaskEntity task : tasks) {
                     DocumentReference dr = mFirestore.collection(FIRESTORE_COLLECTION_PATH).document(task.getUUId());
                     Map<String, Object> docData = new HashMap<>();
-                    Log.d(TAG,task.getText());
+                    Log.d(TAG,task.isDelete() + "deleteFlag" + task.getText());
+                    Log.d(TAG, String.valueOf(tasks.size()));
                     docData.put("id", task.getId());
                     docData.put("text", task.getText());
                     //docData.put("isImportant", task.isImportant());
