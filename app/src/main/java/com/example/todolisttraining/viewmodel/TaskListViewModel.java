@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 
 /**
@@ -36,7 +37,7 @@ import io.reactivex.rxjava3.core.Flowable;
 
 
 public class TaskListViewModel extends AndroidViewModel {
-    private final String TAG = "TaskViewModel";
+    private final String TAG = "TaskListViewModel";
     private List<TaskEntity> mTasks;
     private TaskRepository taskRepository;
 
@@ -51,10 +52,11 @@ public class TaskListViewModel extends AndroidViewModel {
     //非同期処理対応の返り値
     //メソッド内にバージョン不足だと利用できないメソッドあるから注意書きの@RequiresApi
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public Flowable<List<String>> getTaskTextList() {
+    public Single<List<String>> getTaskTextList() {
         Log.d(TAG,"getTaskTextList");
         //tasksを全取得して
-        Flowable<List<TaskEntity>> list = taskRepository.getAllRoomData();
+        Single<List<TaskEntity>> list = taskRepository.getAllRoomData();
+
         if(list == null){
             return null;
         }else{
@@ -62,6 +64,7 @@ public class TaskListViewModel extends AndroidViewModel {
                     //DatabaseにあるTasks＜List＞を取得していじる
                     .map(tasks -> {
                         mTasks = tasks;
+                        Log.d(TAG, String.valueOf(mTasks.size()));//6個
                         return tasks.stream()
                                 //Stringのみを抽出
                                 //for文で回すのと同じ処理
@@ -82,9 +85,6 @@ public class TaskListViewModel extends AndroidViewModel {
     public Completable deleteTask(int position) {
         return taskRepository.deleteTask(position);
     }
-
-
-
 
     public static class TaskListViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

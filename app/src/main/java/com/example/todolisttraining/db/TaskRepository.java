@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
@@ -32,8 +33,8 @@ public class TaskRepository {
         this.firebaseManager = new FirebaseManager();
     }
 
-    public Flowable<List<TaskEntity>> getAllRoomData(){
-        return  mTaskDAO.getAll();
+    public Single<List<TaskEntity>> getAllRoomData(){
+        return  mTaskDAO.getAllSingle();
     }
 
     public Completable insertTask(String text){
@@ -43,8 +44,27 @@ public class TaskRepository {
         //UUID生成
         String uuid = UUID.randomUUID().toString();
 
+        //Entityに登録
+        TaskEntity task = new TaskEntity();
+        task.setText(text);
+        task.setUUId(uuid);
+        task.setDelete(false);
+
+        mTaskDAO.getAllSingle()
+        .subscribeOn(Schedulers.io())
+        .observeOn(Schedulers.io())
+        .subscribe(tasksFromDB -> {
+                    mTasks = tasksFromDB;
+                    mTasks.add(task);
+                });
+
+        Log.d(TAG, String.valueOf(mTasks.size()));
+        if(mTasks.size() != 0){
+            Log.d(TAG,mTasks.get(0).getText());
+        }
+
         //firebaseに登録する処理
-        firebaseManager.uploadTasks((List<TaskEntity>)getAllRoomData())
+        firebaseManager.uploadTasks(mTasks)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(() -> {
@@ -52,16 +72,10 @@ public class TaskRepository {
                     Log.d(TAG,"firebaseUploadTasks");
                 });
 
-        //Entityに登録
-        TaskEntity task = new TaskEntity();
-        task.setText(text);
-        task.setUUId(uuid);
-        Log.d(TAG,uuid);
-        task.setDelete(false);
+
 
         //Data比較
         compareData();
-        Log.d(TAG,task.toString());
 
         //RoomDatabaseに登録
         return mTaskDAO.insert(task);
@@ -71,7 +85,7 @@ public class TaskRepository {
     //Task削除処理
     //表記上削除するがRoomからは削除せずにisDeleteフラグをtrueにして表示しないよう処理する
     public Completable deleteTask(int position) {
-        Flowable<List<TaskEntity>> list = getAllRoomData();
+//        Flowable<List<TaskEntity>> list = getAllRoomData();
         List<TaskEntity> list2 = new ArrayList<>();
 
         //mTaskDAO.update(list.get(position));

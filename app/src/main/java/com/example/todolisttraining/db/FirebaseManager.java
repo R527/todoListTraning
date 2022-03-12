@@ -61,11 +61,14 @@ public class FirebaseManager {
 
     //Taskをアップロードする
     public Completable uploadTasks(List<TaskEntity> tasks) {
+
+//        mFirestore.collection("tasks");
         return Completable.create((sub) -> {
             mFirestore.runTransaction((Transaction.Function<Void>) transaction -> {
                 for (TaskEntity task : tasks) {
                     DocumentReference dr = mFirestore.collection(FIRESTORE_COLLECTION_PATH).document(task.getUUId());
                     Map<String, Object> docData = new HashMap<>();
+                    Log.d(TAG,task.getText());
                     docData.put("id", task.getId());
                     docData.put("text", task.getText());
                     //docData.put("isImportant", task.isImportant());
