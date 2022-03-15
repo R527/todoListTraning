@@ -67,6 +67,11 @@ public class TaskListViewModel extends AndroidViewModel {
                         mTasks = tasks;
                         Log.d(TAG, String.valueOf(mTasks.size()));
 
+                        return tasks.stream()
+                                .filter(t -> !t.isDelete())
+                                .map(t -> t.getText())
+                                .collect(Collectors.toList());
+
 //                        return tasks.stream()
 //                                //Stringのみを抽出
 //                                //for文で回すのと同じ処理
@@ -74,12 +79,12 @@ public class TaskListViewModel extends AndroidViewModel {
 //                                .forEach(id -> tasks.get(id));
 
 
-                        for (TaskEntity item: mTasks) {
-                            if(item.isDelete() == false){
-                                strList.add(item.getText());
-                            }
-                        }
-                        return  strList;
+//                        for (TaskEntity item: mTasks) {
+//                            if(item.isDelete() == false){
+//                                strList.add(item.getText());
+//                            }
+//                        }
+//                        return  strList;
                     });
         }
 

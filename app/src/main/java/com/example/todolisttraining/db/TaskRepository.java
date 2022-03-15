@@ -79,62 +79,102 @@ public class TaskRepository {
 
         Log.d(TAG,"deleteTask");
 
-        mTaskDAO.getAllSingle()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(tasksFromDB -> {
-                            mTasks = tasksFromDB;
+        return mTaskDAO.getAllSingle()
+                .flatMapCompletable(tasksFromDB -> Completable.create( (emitter) -> {
+                    mTasks = tasksFromDB;
 
+                    String uuid = "";
+                    //削除されてないタスクを取り出す
+                    for(TaskEntity taskEntity:mTasks){
+                        if(!taskEntity.isDelete()){
+                            taskEntities.add(taskEntity);
+                        }
+                    }
 
-                            String uuid = "";
-                            //削除されてないタスクを取り出す
-                            for(TaskEntity taskEntity:mTasks){
-                                if(!taskEntity.isDelete()){
-                                    taskEntities.add(taskEntity);
-                                }
-                            }
+                    Log.d(TAG,taskEntities.size() + "taskEntities.size() ");
+                    //削除するタスクを指定して
+                    for(TaskEntity mTask:mTasks){
+                        //DeleteフラグがFalaseのListの中で該当したUUIDと
+                        //全てのListにあるUUIDが一致したとき
+                        //削除フラグをtrueにする
+                        if(taskEntities.get(position).getUUId() == mTask.getUUId()){
+                            mTask.setDelete(true);
+                            mTasks.set(mTask.getId(),mTask);
+                            Log.d(TAG,mTask.getId() +"mTaskId");
+                        }
+                    }
 
-                            Log.d(TAG,taskEntities.size() + "taskEntities.size() ");
-                            //削除するタスクを指定して
-                            for(TaskEntity mTask:mTasks){
-                                //DeleteフラグがFalaseのListの中で該当したUUIDと
-                                //全てのListにあるUUIDが一致したとき
-                                //削除フラグをtrueにする
-                                if(taskEntities.get(position).getUUId() == mTask.getUUId()){
-                                    mTask.setDelete(true);
-                                    mTasks.set(mTask.getId(),mTask);
-                                    Log.d(TAG,mTask.getId() +"mTaskId");
-                                }
-                            }
+                    Log.d(TAG,taskEntities.get(position).isDelete() + "taskEntities.get(position).isDelete() ");
+                    Log.d(TAG,taskEntities.get(position).getId() + "id");
+                    Log.d(TAG,taskEntities.get(position).getUUId() + " uuid");
 
-                            Log.d(TAG,taskEntities.get(position).isDelete() + "taskEntities.get(position).isDelete() ");
-                            Log.d(TAG,taskEntities.get(position).getId() + "id");
-                            Log.d(TAG,taskEntities.get(position).getUUId() + " uuid");
+                    Log.d(TAG,mTasks.get(3).isDelete() + ": mTasks : taskEntities.get(position).isDelete() ");
+                    Log.d(TAG,mTasks.get(3).getId() + ": mTasks : id");
+                    Log.d(TAG,mTasks.get(3).getUUId() + ": mTasks : uuid");
+                    Log.d(TAG,uuid);
 
-                            Log.d(TAG,mTasks.get(3).isDelete() + ": mTasks : taskEntities.get(position).isDelete() ");
-                            Log.d(TAG,mTasks.get(3).getId() + ": mTasks : id");
-                            Log.d(TAG,mTasks.get(3).getUUId() + ": mTasks : uuid");
-                            Log.d(TAG,uuid);
+                    Log.d(TAG, mTasks.size() + "first");
+                    emitter.onComplete();
+                }))
+                .andThen(firebaseManager.uploadTasks(mTasks))
+                .andThen(mTaskDAO.update(mTasks.get(taskEntities.get(position).getId())));
 
-                            Log.d(TAG, mTasks.size() + "first");
-
-                            //firebaseを更新する
-                    firebaseManager.uploadTasks(mTasks)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(Schedulers.io())
-                            .subscribe(() -> {
-                                //アップロード完了時の処理
-                                Log.d(TAG,"firebaseUploadTasks");
-                            });
-                        });
-
-        try{
-            Thread.sleep(1000);
-            Log.d(TAG,position + "position");
-            return mTaskDAO.update(mTasks.get(taskEntities.get(position).getId()));
-        }catch(InterruptedException e){
-            return null;
-        }
+//        mTaskDAO.getAllSingle()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(Schedulers.io())
+//                .subscribe(tasksFromDB -> {
+//                            mTasks = tasksFromDB;
+//
+//
+//                            String uuid = "";
+//                            //削除されてないタスクを取り出す
+//                            for(TaskEntity taskEntity:mTasks){
+//                                if(!taskEntity.isDelete()){
+//                                    taskEntities.add(taskEntity);
+//                                }
+//                            }
+//
+//                            Log.d(TAG,taskEntities.size() + "taskEntities.size() ");
+//                            //削除するタスクを指定して
+//                            for(TaskEntity mTask:mTasks){
+//                                //DeleteフラグがFalaseのListの中で該当したUUIDと
+//                                //全てのListにあるUUIDが一致したとき
+//                                //削除フラグをtrueにする
+//                                if(taskEntities.get(position).getUUId() == mTask.getUUId()){
+//                                    mTask.setDelete(true);
+//                                    mTasks.set(mTask.getId(),mTask);
+//                                    Log.d(TAG,mTask.getId() +"mTaskId");
+//                                }
+//                            }
+//
+//                            Log.d(TAG,taskEntities.get(position).isDelete() + "taskEntities.get(position).isDelete() ");
+//                            Log.d(TAG,taskEntities.get(position).getId() + "id");
+//                            Log.d(TAG,taskEntities.get(position).getUUId() + " uuid");
+//
+//                            Log.d(TAG,mTasks.get(3).isDelete() + ": mTasks : taskEntities.get(position).isDelete() ");
+//                            Log.d(TAG,mTasks.get(3).getId() + ": mTasks : id");
+//                            Log.d(TAG,mTasks.get(3).getUUId() + ": mTasks : uuid");
+//                            Log.d(TAG,uuid);
+//
+//                            Log.d(TAG, mTasks.size() + "first");
+//
+//                            //firebaseを更新する
+//                    firebaseManager.uploadTasks(mTasks)
+//                            .subscribeOn(Schedulers.io())
+//                            .observeOn(Schedulers.io())
+//                            .subscribe(() -> {
+//                                //アップロード完了時の処理
+//                                Log.d(TAG,"firebaseUploadTasks");
+//                            });
+//                        });
+//
+//        try{
+//            Thread.sleep(1000);
+//            Log.d(TAG,position + "position");
+//            return mTaskDAO.update(mTasks.get(taskEntities.get(position).getId()));
+//        }catch(InterruptedException e){
+//            return null;
+//        }
 
     }
 
