@@ -108,12 +108,14 @@ public class TaskRepository {
                     Log.d(TAG,taskEntities.get(position).getId() + "id");
                     Log.d(TAG,taskEntities.get(position).getUUId() + " uuid");
 
-                    Log.d(TAG,mTasks.get(3).isDelete() + ": mTasks : taskEntities.get(position).isDelete() ");
-                    Log.d(TAG,mTasks.get(3).getId() + ": mTasks : id");
-                    Log.d(TAG,mTasks.get(3).getUUId() + ": mTasks : uuid");
+//                    Log.d(TAG,mTasks.get(3).isDelete() + ": mTasks : taskEntities.get(position).isDelete() ");
+//                    Log.d(TAG,mTasks.get(3).getId() + ": mTasks : id");
+//                    Log.d(TAG,mTasks.get(3).getUUId() + ": mTasks : uuid");
                     Log.d(TAG,uuid);
 
                     Log.d(TAG, mTasks.size() + "first");
+
+
                     emitter.onComplete();
                 }))
                 .andThen(firebaseManager.uploadTasks(mTasks))
