@@ -81,7 +81,10 @@ public class FirebaseManager {
 
                 // Success
                 return null;
-            }).addOnSuccessListener(aVoid -> Log.d(TAG, "Transaction success!"))
+            }).addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "Transaction success!");
+                sub.onComplete();
+                    })
                     .addOnFailureListener(e -> Log.w(TAG, "Transaction failure.", e));
         });
     }

@@ -71,20 +71,6 @@ public class TaskListViewModel extends AndroidViewModel {
                                 .filter(t -> !t.isDelete())
                                 .map(t -> t.getText())
                                 .collect(Collectors.toList());
-
-//                        return tasks.stream()
-//                                //Stringのみを抽出
-//                                //for文で回すのと同じ処理
-//                                .map(task -> task.getId())
-//                                .forEach(id -> tasks.get(id));
-
-
-//                        for (TaskEntity item: mTasks) {
-//                            if(item.isDelete() == false){
-//                                strList.add(item.getText());
-//                            }
-//                        }
-//                        return  strList;
                     });
         }
 
@@ -97,9 +83,9 @@ public class TaskListViewModel extends AndroidViewModel {
     }
 
     //タスク削除処理
-    public Completable deleteTask(int position) {
+    public Completable deleteTask(int taskEntityPos) {
         Log.d(TAG,"deleteTask");
-        return taskRepository.deleteTask(position);
+        return taskRepository.deleteTask(taskEntityPos);
     }
 
     public static class TaskListViewModelFactory extends ViewModelProvider.NewInstanceFactory {

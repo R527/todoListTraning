@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase;
 
 //データベースを取り扱うクラス
 
-@Database(entities = {TaskEntity.class}, version = 4, exportSchema = false)
+@Database(entities = {TaskEntity.class}, version = 6, exportSchema = false)
 public abstract class AppDatabase  extends RoomDatabase {
 
     private static AppDatabase sInstance;
