@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.todolisttraining.db.TaskDAO;
 import com.example.todolisttraining.db.TaskEntity;
 import com.example.todolisttraining.db.TaskRepository;
+import com.example.todolisttraining.ui.TaskAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +54,12 @@ public class TaskListViewModel extends AndroidViewModel {
     //メソッド内にバージョン不足だと利用できないメソッドあるから注意書きの@RequiresApi
     @RequiresApi(api = Build.VERSION_CODES.N)
     public Single<List<String>> getTaskTextList() {
-        Log.d(TAG,"getTaskTextList");
-        //tasksを全取得して
-        Single<List<TaskEntity>> list = taskRepository.getAllRoomData();
-        List<String> strList = new ArrayList<>();
-
-        if(list == null){
-            return null;
-        }else{
+//        Log.d(TAG,"getTaskTextList");
+//        //tasksを全取得して
+//        Single<List<TaskEntity>> list = taskRepository.getAllRoomData();
+//        if(list == null){
+//            return null;
+//        }else{
             return taskRepository.getAllRoomData()
                     //DatabaseにあるTasks＜List＞を取得していじる
                     .map(tasks -> {
@@ -72,7 +71,7 @@ public class TaskListViewModel extends AndroidViewModel {
                                 .map(t -> t.getText())
                                 .collect(Collectors.toList());
                     });
-        }
+
 
     }
 

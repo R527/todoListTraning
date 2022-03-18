@@ -73,6 +73,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 Log.d(TAG, "Element " + v.getTag() + " deleted.");
                 if(mListener != null) {
                     mListener.onClickDeleteTask((int)v.getTag());
+                    notifyDataSetChanged();
                 }
             }
         });

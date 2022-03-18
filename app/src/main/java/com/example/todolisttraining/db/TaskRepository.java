@@ -4,6 +4,7 @@ package com.example.todolisttraining.db;
 import android.app.Application;
 import android.util.Log;
 
+import com.example.todolisttraining.ui.TaskAdapter;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -19,16 +21,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class TaskRepository {
     private final String TAG = "TaskRepository";
     private TaskDAO mTaskDAO;
-    private FirebaseManager firebaseManager;
-    //private List<TaskEntity> mTasks = new ArrayList<>();
-    private List<TaskEntity> taskEntities = new ArrayList<>();
+    private FirebaseManager mFirebaseManager;
 
 
     public TaskRepository(Application applicationContext) {
         AppDatabase db = AppDatabase.getInstance(applicationContext);
         this.mTaskDAO = db.taskDAO();
 
-        this.firebaseManager = new FirebaseManager();
+        this.mFirebaseManager = new FirebaseManager();
     }
 
     public Single<List<TaskEntity>> getAllRoomData(){
@@ -48,30 +48,44 @@ public class TaskRepository {
         task.setUUId(uuid);
         task.setDelete(false);
 
-
-        mTaskDAO.getAllSingle()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(tasksFromDB -> {
-                    tasksFromDB.add(task);
+        return  mTaskDAO.getAllSingle()
+                .flatMapCompletable(tasksFromDB -> Completable.create((emitter) ->{
+                            tasksFromDB.add(task);
 
                     //firebaseを更新する
-                    firebaseManager.uploadTasks(tasksFromDB)
+                    mFirebaseManager.uploadTasks(tasksFromDB)
+                            .observeOn(Schedulers.io())
+                            .andThen(mTaskDAO.insert(task))
                             .subscribeOn(Schedulers.io())
                             .observeOn(Schedulers.io())
                             .subscribe(() -> {
                                 //アップロード完了時の処理
                                 Log.d(TAG,"firebaseUploadTasks");
                             });
-                });
-
-        //RoomDatabaseに登録
-        try{
-            Thread.sleep(1000);
-            return mTaskDAO.insert(task);
-        }catch(InterruptedException e){
-            return null;
-        }
+                        }));
+//        mTaskDAO.getAllSingle()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(Schedulers.io())
+//                .subscribe(tasksFromDB -> {
+//                    tasksFromDB.add(task);
+//
+//                    //firebaseを更新する
+//                    mFirebaseManager.uploadTasks(tasksFromDB)
+//                            .subscribeOn(Schedulers.io())
+//                            .observeOn(Schedulers.io())
+//                            .subscribe(() -> {
+//                                //アップロード完了時の処理
+//                                Log.d(TAG,"firebaseUploadTasks");
+//                            });
+//                });
+//
+//        //RoomDatabaseに登録
+//        try{
+//            Thread.sleep(1000);
+//            return mTaskDAO.insert(task);
+//        }catch(InterruptedException e){
+//            return null;
+//        }
 
     }
 
@@ -96,12 +110,15 @@ public class TaskRepository {
                     }
 
                     Log.d(TAG, activeTasks.size() + "taskEntities.size() ");
+
                     //削除するタスクを指定して
                     for (TaskEntity task : tasksFromDB) {
                         //DeleteフラグがFalaseのListの中で該当したUUIDと
                         //全てのListにあるUUIDが一致したとき
                         //削除フラグをtrueにする
                         if (activeTasks.get(entityPos).getUUId().equals(task.getUUId())) {
+                            Log.d(TAG, activeTasks.get(entityPos).getUUId() + "entityPos.getUUId()");
+                            Log.d(TAG, task.getUUId() + "task.getUUId() ");
                             task.setDelete(true);
                             deleteTask = task;
                             break;
@@ -114,7 +131,7 @@ public class TaskRepository {
 
                     Log.d(TAG, tasksFromDB.size() + "first");
 
-                    firebaseManager.uploadTasks(tasksFromDB)
+                    mFirebaseManager.uploadTasks(tasksFromDB)
                             .observeOn(Schedulers.io())
                             .andThen(mTaskDAO.update(deleteTask))
                             .subscribeOn(Schedulers.io())
