@@ -20,6 +20,7 @@ import com.example.todolisttraining.db.TaskEntity;
 import com.example.todolisttraining.db.TaskRepository;
 import com.example.todolisttraining.viewmodel.TaskListViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -75,13 +76,21 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
        Log.d(TAG,"onStart");
 
         if(mTaskListViewModel.getTaskList() != null){
+            Log.d(TAG, "if");
             //mDisposableでそれ以下の処理が繰り返されるのを止める
             mDisposable.add(mTaskListViewModel.getTaskList()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     //AdapterにあるRecyclerViewにTextListを渡す
                     .subscribe(taskList -> {
-                                mAdapter.setData(taskList);
+                                List<TaskEntity> list = new ArrayList<>();
+                                for(TaskEntity task :taskList){
+                                    if(!task.isDelete){
+                                        list.add(task);
+                                    }
+                                }
+                                Log.d(TAG, String.valueOf(list.size()));
+                                mAdapter.setData(list);
                             },
                             throwable -> Log.e(TAG, "Unable to get username", throwable)));
         }

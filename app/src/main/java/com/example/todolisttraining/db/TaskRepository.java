@@ -32,8 +32,8 @@ public class TaskRepository {
         this.mFirebaseManager = new FirebaseManager();
     }
 
-    public Single<List<TaskEntity>> getAllRoomData(){
-        return  mTaskDAO.getAllSingle();
+    public Flowable<List<TaskEntity>> getAllRoomData(){
+        return  mTaskDAO.getAll();
     }
 
     public Completable insertTask(TaskEntity taskEntity){

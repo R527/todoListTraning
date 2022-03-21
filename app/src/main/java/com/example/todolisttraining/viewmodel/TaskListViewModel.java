@@ -53,7 +53,7 @@ public class TaskListViewModel extends AndroidViewModel {
     //非同期処理対応の返り値
     //メソッド内にバージョン不足だと利用できないメソッドあるから注意書きの@RequiresApi
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public Single<List<TaskEntity>> getTaskList() {
+    public Flowable<List<TaskEntity>> getTaskList() {
        Log.d(TAG,"getTaskList");
             return taskRepository.getAllRoomData();
                     //DatabaseにあるTasks＜List＞を取得していじる
