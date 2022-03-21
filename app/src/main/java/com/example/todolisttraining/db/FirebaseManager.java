@@ -42,9 +42,9 @@ public class FirebaseManager {
                             List r = new ArrayList<String>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 TaskEntity t = new TaskEntity();
-                                t.setId(0);
+                                t.setId((int) document.getData().get("id"));
                                 t.setText((String) document.getData().get("text"));
-                                //t.setImportant((Boolean) document.getData().get("isImportant"));
+                                t.setImportant((Boolean) document.getData().get("isImportant"));
 
                                 t.setDelete((Boolean) document.getData().get("isDelete"));
                                 t.setUUId((String) document.getData().get("uuid"));
@@ -73,7 +73,7 @@ public class FirebaseManager {
                     Log.d(TAG, String.valueOf(tasks.size()));
                     docData.put("id", task.getId());
                     docData.put("text", task.getText());
-                    //docData.put("isImportant", task.isImportant());
+                    docData.put("isImportant", task.isImportant());
                     docData.put("isDelete", task.isDelete());
                     docData.put("uuid", task.getUUId());
                     transaction.set(dr, docData);

@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -35,7 +36,7 @@ public class TaskRepository {
         return  mTaskDAO.getAllSingle();
     }
 
-    public Completable insertTask(String text){
+    public Completable insertTask(TaskEntity taskEntity){
 
         Log.d(TAG,"insertTask");
 
@@ -44,7 +45,8 @@ public class TaskRepository {
 
         //Entityに登録
         TaskEntity task = new TaskEntity();
-        task.setText(text);
+        task.setText(taskEntity.getText());
+        task.setImportant(taskEntity.isImportant);
         task.setUUId(uuid);
         task.setDelete(false);
 
@@ -63,29 +65,6 @@ public class TaskRepository {
                                 Log.d(TAG,"firebaseUploadTasks");
                             });
                         }));
-//        mTaskDAO.getAllSingle()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(Schedulers.io())
-//                .subscribe(tasksFromDB -> {
-//                    tasksFromDB.add(task);
-//
-//                    //firebaseを更新する
-//                    mFirebaseManager.uploadTasks(tasksFromDB)
-//                            .subscribeOn(Schedulers.io())
-//                            .observeOn(Schedulers.io())
-//                            .subscribe(() -> {
-//                                //アップロード完了時の処理
-//                                Log.d(TAG,"firebaseUploadTasks");
-//                            });
-//                });
-//
-//        //RoomDatabaseに登録
-//        try{
-//            Thread.sleep(1000);
-//            return mTaskDAO.insert(task);
-//        }catch(InterruptedException e){
-//            return null;
-//        }
 
     }
 

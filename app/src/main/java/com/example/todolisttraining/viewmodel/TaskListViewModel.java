@@ -53,32 +53,27 @@ public class TaskListViewModel extends AndroidViewModel {
     //非同期処理対応の返り値
     //メソッド内にバージョン不足だと利用できないメソッドあるから注意書きの@RequiresApi
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public Single<List<String>> getTaskTextList() {
-//        Log.d(TAG,"getTaskTextList");
-//        //tasksを全取得して
-//        Single<List<TaskEntity>> list = taskRepository.getAllRoomData();
-//        if(list == null){
-//            return null;
-//        }else{
-            return taskRepository.getAllRoomData()
+    public Single<List<TaskEntity>> getTaskList() {
+       Log.d(TAG,"getTaskList");
+            return taskRepository.getAllRoomData();
                     //DatabaseにあるTasks＜List＞を取得していじる
-                    .map(tasks -> {
-                        mTasks = tasks;
-                        Log.d(TAG, String.valueOf(mTasks.size()));
-
-                        return tasks.stream()
-                                .filter(t -> !t.isDelete())
-                                .map(t -> t.getText())
-                                .collect(Collectors.toList());
-                    });
+//                    .map(tasks -> {
+//                        mTasks = tasks;
+//                        Log.d(TAG, String.valueOf(mTasks.size()));
+//
+////                        return tasks.stream()
+////                                .filter(t -> !t.isDelete())
+////                                .map(t -> t.getClass())
+////                                .collect(Collectors.toList());
+//                    });
 
 
     }
 
     //タスクを追加する処理
-    public Completable insertTask(final String text) {
+    public Completable insertTask(final TaskEntity taskEntity) {
         Log.d(TAG,"insertTask");
-        return taskRepository.insertTask(text);
+        return taskRepository.insertTask(taskEntity);
     }
 
     //タスク削除処理

@@ -24,6 +24,9 @@ public class TaskEntity {
     @ColumnInfo(name = "isDelete")
     public boolean isDelete;
 
+    @ColumnInfo(name = "isImportant")
+    public boolean isImportant;
+
     public int getId() {
         return id;
     }
@@ -54,5 +57,13 @@ public class TaskEntity {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    public boolean isImportant() {
+        return isImportant;
+    }
+
+    public void setImportant(boolean important) {
+        isImportant = important;
     }
 }

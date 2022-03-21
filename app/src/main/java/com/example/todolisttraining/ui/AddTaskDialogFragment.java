@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.todolisttraining.R;
+import com.example.todolisttraining.db.TaskEntity;
 import com.example.todolisttraining.db.TaskRepository;
 import com.example.todolisttraining.viewmodel.TaskListViewModel;
 
@@ -69,12 +71,17 @@ public class AddTaskDialogFragment  extends DialogFragment {
                         Log.d(TAG, "OK was clicked.");
 
                         EditText editText = (EditText) getDialog().findViewById(R.id.task_text);
-                        //&& mTaskListViewModel.insertTask(editText.getText().toString()) != null
+                        CheckBox checkBox = (CheckBox) getDialog().findViewById(R.id.important_checkBox);
                         if (editText != null) {
                             //タスク追加処理
                             Log.d(TAG,editText.getText().toString());
 //                            Log.d(TAG,mTaskListViewModel.insertTask("test").toString());
-                            mDisposable.add(mTaskListViewModel.insertTask(editText.getText().toString())
+                            //editText.getText().toString()
+                            TaskEntity task = new TaskEntity();
+                            task.setText(editText.getText().toString());
+                            task.setImportant(checkBox.isChecked());
+
+                            mDisposable.add(mTaskListViewModel.insertTask(task)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(() -> {},

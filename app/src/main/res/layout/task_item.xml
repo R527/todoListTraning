@@ -5,6 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/important_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#D50000"
+        android:src="@drawable/outline_priority_high_24"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        />
+
     <TextView
         android:id="@+id/task_text"
         app:layout_constraintStart_toStartOf="parent"
