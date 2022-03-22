@@ -104,11 +104,6 @@ public class TaskRepository {
                         }
                     }
 
-//                    Log.d(TAG, activeTasks.get(position).isDelete() + "activeTasks.get(position).isDelete() ");
-//                    Log.d(TAG, activeTasks.get(position).getId() + "id");
-//                    Log.d(TAG, activeTasks.get(position).getUUId() + " uuid");
-
-                    Log.d(TAG, tasksFromDB.size() + "first");
 
                     mFirebaseManager.uploadTasks(tasksFromDB)
                             .observeOn(Schedulers.io())

@@ -56,18 +56,6 @@ public class TaskListViewModel extends AndroidViewModel {
     public Flowable<List<TaskEntity>> getTaskList() {
        Log.d(TAG,"getTaskList");
             return taskRepository.getAllRoomData();
-                    //DatabaseにあるTasks＜List＞を取得していじる
-//                    .map(tasks -> {
-//                        mTasks = tasks;
-//                        Log.d(TAG, String.valueOf(mTasks.size()));
-//
-////                        return tasks.stream()
-////                                .filter(t -> !t.isDelete())
-////                                .map(t -> t.getClass())
-////                                .collect(Collectors.toList());
-//                    });
-
-
     }
 
     //タスクを追加する処理
