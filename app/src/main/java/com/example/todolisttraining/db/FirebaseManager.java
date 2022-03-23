@@ -42,10 +42,9 @@ public class FirebaseManager {
                             List r = new ArrayList<String>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 TaskEntity t = new TaskEntity();
-                                t.setId((int) document.getData().get("id"));
+                                t.setId(Integer.parseInt(document.getData().get("id").toString()));
                                 t.setText((String) document.getData().get("text"));
                                 t.setImportant((Boolean) document.getData().get("isImportant"));
-
                                 t.setDelete((Boolean) document.getData().get("isDelete"));
                                 t.setUUId((String) document.getData().get("uuid"));
                                 r.add(t);

@@ -27,6 +27,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 //DiaLogに関するクラス
+
 public class AddTaskDialogFragment  extends DialogFragment {
     private final String TAG = "AddTaskDialogFragment";
     private TaskListViewModel mTaskListViewModel;

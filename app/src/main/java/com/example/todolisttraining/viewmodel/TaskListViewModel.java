@@ -58,13 +58,21 @@ public class TaskListViewModel extends AndroidViewModel {
             return taskRepository.getAllRoomData();
     }
 
+    public Single<List<TaskEntity>> getFirebaseList(){
+        return taskRepository.getFirebaseList();
+    }
+
     //タスクを追加する処理
     public Completable insertTask(final TaskEntity taskEntity) {
         Log.d(TAG,"insertTask");
         return taskRepository.insertTask(taskEntity);
     }
 
-    //タスク削除処理
+    /**
+     *
+     * @param taskEntityPos 削除するタスクのポジション
+     * @return
+     */
     public Completable deleteTask(int taskEntityPos) {
         Log.d(TAG,"deleteTask");
         return taskRepository.deleteTask(taskEntityPos);
