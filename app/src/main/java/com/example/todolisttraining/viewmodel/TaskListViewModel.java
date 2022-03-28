@@ -58,6 +58,10 @@ public class TaskListViewModel extends AndroidViewModel {
             return taskRepository.getAllRoomData();
     }
 
+    public Single<List<TaskEntity>> getTaskListSingle(){
+        return taskRepository.getAllRoomDataSingle();
+    }
+
     public Single<List<TaskEntity>> getFirebaseList(){
         return taskRepository.getFirebaseList();
     }

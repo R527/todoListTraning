@@ -36,6 +36,10 @@ public class TaskRepository {
         return  mTaskDAO.getAll();
     }
 
+    public Single<List<TaskEntity>> getAllRoomDataSingle(){
+        return  mTaskDAO.getAllSingle();
+    }
+
     public Single<List<TaskEntity>> getFirebaseList(){
         return  mFirebaseManager.fetchTasks();
     }

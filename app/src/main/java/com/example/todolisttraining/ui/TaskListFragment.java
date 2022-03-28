@@ -79,53 +79,41 @@ public class TaskListFragment extends Fragment implements DeleteTaskListener {
        Log.d(TAG,"onStart");
        if(mTaskListViewModel.getTaskList() == null) return;
 
-        List<TaskEntity> firebaseListLen = new ArrayList<>();
         mTaskListViewModel.getTaskList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
 
                 //AdapterにあるRecyclerViewにTextListを渡す
-                .subscribe(firebaseList -> {
-                            for(TaskEntity task : firebaseList){
-                                firebaseListLen.add(task);
-                            }
+                .flatMapSingle(firebaseList -> {
+                    List<TaskEntity> firebaseListLen = new ArrayList<>();
 
-                            if(firebaseListLen.size() == 0){
-                                Log.d(TAG, "RoomDataが0件のとき");
-                                mTaskListViewModel.getFirebaseList()
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        //AdapterにあるRecyclerViewにTextListを渡す
-                                        .subscribe(taskList -> {
-                                                    List<TaskEntity> list = new ArrayList<>();
-                                                    for(TaskEntity task :taskList){
-                                                        if(!task.isDelete){
-                                                            list.add(task);
-                                                        }
-                                                    }
-                                                    mAdapter.setData(list);
-                                                },
-                                                throwable -> Log.e(TAG, "Unable to get username", throwable));
-                            }else{
-                                Log.d(TAG, "RoomDataが1件以上あるとき");
-                                //mDisposableでそれ以下の処理が繰り返されるのを止める
-                                mDisposable.add(mTaskListViewModel.getTaskList()
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        //AdapterにあるRecyclerViewにTextListを渡す
-                                        .subscribe(taskList -> {
-                                                    List<TaskEntity> list = new ArrayList<>();
-                                                    for(TaskEntity task :taskList){
-                                                        if(!task.isDelete){
-                                                            list.add(task);
-                                                        }
-                                                    }
-                                                    mAdapter.setData(list);
-                                                },
-                                                throwable -> Log.e(TAG, "Unable to get username", throwable)));
+                    for (TaskEntity task : firebaseList) {
+                        firebaseListLen.add(task);
+                    }
+                    if (firebaseListLen.size() == 0) {
+                        Log.d(TAG, "RoomDataが0件のとき");
+                        return mTaskListViewModel.getFirebaseList();
+                    } else {
+                        Log.d(TAG, "RoomDataが1件以上あるとき");
+                        return mTaskListViewModel.getTaskListSingle();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(taskList -> {
+                            List<TaskEntity> list = new ArrayList<>();
+                            for (TaskEntity task : (List<TaskEntity>)taskList) {
+                                if (!task.isDelete) {
+                                    list.add(task);
+                                }
                             }
+                            mAdapter.setData(list);
                         },
                         throwable -> Log.e(TAG, "Unable to get username", throwable));
+
+        mTaskListViewModel.getTaskList()
+                .flatMapSingle(roomDataList ->{
+
+                    return null;
+                });
     }
 
 
